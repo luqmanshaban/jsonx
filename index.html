@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link href="static/styles.css" rel="stylesheet" />
+  </head>
+  <body class="">
+    <div class="container">
+      <section class="nav">
+        <div class="logo">
+          <p>
+            <span style="color: #f8f9fa">J</span>
+            <span style="color: #6c757d">S</span>
+            <img src="static/logo.png" alt="logo" />
+            <!-- <span style="color: #dee2e6;">O</span> -->
+            <span style="color: #6c757d">N</span>
+            <span style="color: #dee2e6">X</span>
+          </p>
+        </div>
+        <a href="http://github.com/luqmanshaban/jsonx" target="_blank">
+          <img src="static/github.svg" alt="github" />
+        </a>
+      </section>
+
+      <section class="heroText">
+        <!-- <h1>From JSON to Perfectly Typed Interfaces</h1> -->
+        <p>
+          Quickly turn JSON data into neat and easy-to-use typed interfaces for
+          your code.
+        </p>
+      </section>
+      <section class="form-container">
+        <form id="form">
+          <div class="select">
+            <label for="language">Language</label>
+            <select name="language" id="language" required>
+              <option value="" selected disabled>choose language</option>
+              <option value="typescript">TypeScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="csharp">C#</option>
+              <option value="golang">Go</option>
+              <option value="kotlin">Kotlin</option>
+              <option value="dart">Dart</option>
+              <option value="swift">Swift</option>
+              <option value="rust">Rust</option>
+              <option value="php">PHP</option>
+              <option value="ruby">Ruby</option>
+              <option value="cpp">C++</option>
+            </select>
+          </div>
+          <div>
+            <textarea
+              name="json_object"
+              id="json_object"
+              required
+              placeholder="paste your json here..."
+            ></textarea>
+          </div>
+          <div class="btn">
+            <button id="submit">
+              <p id="generate">Generate</p>
+              <p id="generating">generating....</p>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="response" class="response-container">
+        <div>
+          <textarea class="response" disabled id="code" value="my code">
+          </textarea>
+          <button id="copybtn" onclick="Copy()">
+            <p id="copy">copy</p>
+            <p id="copied">copied!</p>
+          </button>
+        </section>
+
+        </div>
+    </div>
+
+    <script>
+      const btn = document.getElementById("submit");
+      const btnTxt = document.getElementById("generate");
+      const loader = document.getElementById("generating");
+      const copybtn = document.getElementById("copybtn");
+      const copy = document.getElementById("copy");
+      const copied = document.getElementById("copied");
+      const form = document.getElementById("form");
+      const response = document.getElementById("response");
+      const code = document.getElementById("code");
+      loader.style.display = "none";
+      copied.style.display = "none";
+      response.style.display = "none";
+
+      function Copy() {
+        // Get the text field
+
+        // Select the text field
+        code.select();
+        code.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(code.value);
+        copied.style.display = "block ";
+        copy.style.display = "none ";
+        setTimeout(() => {
+          copied.style.display = "none ";
+          copy.style.display = "block ";
+        }, 4000);
+
+        // Alert the copied text
+        alert("Copied the text: " + code.value);
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.style.cursor = "none";
+        btn.style.color = "rgb(233, 236, 239)";
+        btn.style.backgroundColor = "rgba(108, 117, 125, 0.9)";
+        const json = document.getElementById("json_object").value;
+        const lang = document.getElementById("language").value;
+        const body = JSON.stringify({ json_object: json, language: lang });
+        btnTxt.style.display = "none";
+        loader.style.display = "block";
+
+        try {
+          const res = await fetch("http://localhost:8000/generate", {
+            method: "POST",
+            body: JSON.stringify({ json_object: json, language: lang }),
+          });
+
+          if (!res.ok) {
+            const error = await res.json();
+            console.error(error);
+          }
+          const data = await res.json();
+          response.style.display = "block";
+          const parsedInterface = JSON.parse(data.response);
+          code.textContent = parsedInterface.interface;
+          form.style.display = "none";
+          console.log(parsedInterface.interface);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>
