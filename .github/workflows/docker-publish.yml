@@ -42,7 +42,7 @@ jobs:
           script: |
             docker pull luqmanshaban/jsonx:latest
             docker rm -f jsonx || true
-            docker run -d -p 4442:4442 --name jsonx \
+            docker run -d -p ${{ secrets.PORT }}:${{ secrets.PORT }} --name jsonx \
               -e PORT="${{ secrets.PORT }}" \
               -e GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
               luqmanshaban/jsonx:latest
