@@ -30,7 +30,7 @@
           <span style="color: #dee2e6">X</span>
         </p>
       </div>
-      <a href="http://github.com/luqmanshaban/jsonx" target="_blank">
+      <a href="https://github.com/luqmanshaban/jsonx" target="_blank">
         <img src="static/github.svg" alt="github" />
       </a>
     </section>
@@ -117,8 +117,6 @@
         copy.style.display = "block ";
       }, 4000);
 
-      // Alert the copied text
-      alert("Copied the text: " + code.value);
     }
 
     form.addEventListener("submit", async (e) => {
@@ -134,7 +132,7 @@
       loader.style.display = "block";
 
       try {
-        const res = await fetch("http://localhost:8000/generate", {
+        const res = await fetch("https://jsonx.tanelt.com/generate", {
           method: "POST",
           body: JSON.stringify({ json_object: json, language: lang }),
         });
