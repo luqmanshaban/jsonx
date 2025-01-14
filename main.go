@@ -113,7 +113,7 @@ func Gemini(jsonObject string, lang string) (string, error) {
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Failed to load .env, %v", err)
+		log.Println("Failed to load .env")
 	}
 	r := http.NewServeMux()
 
