@@ -124,7 +124,8 @@ func main() {
 	r.Handle("/static/", http.StripPrefix("/static/",fs))
 
 	log.Println("server running...")
-	err = http.ListenAndServe(":8000", r)
+	port := fmt.Sprintf(":%v",os.Getenv("PORT"))
+	err = http.ListenAndServe(port, r)
 	if err != nil {
 		log.Fatal(err)
 	}
